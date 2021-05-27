@@ -1,0 +1,19 @@
+{
+  "name": "crowdx",
+  "version": "0.0.1",
+  "description": "State management library",
+  "repository": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Manuel Jager",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-jest": "^27.0.1",
+    "ts-node": "^10.0.0",
+    "ts-standard": "^10.0.0",
+    "typescript": "^4.3.2"
+  }
+}
