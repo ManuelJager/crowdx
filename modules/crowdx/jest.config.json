@@ -1,0 +1,16 @@
+{
+  "moduleFileExtensions": [
+    "js",
+    "json"
+  ],
+  "rootDir": "./src/",
+  "testRegex": ".test.js$",
+  "setupFiles": [
+    "<rootDir>/tests/setup.js"
+  ],
+  "coverageDirectory": "<rootDir>/../coverage",
+  "testEnvironment": "node",
+  "coveragePathIgnorePatterns": [
+    "<rootDir>/tests"
+  ]
+}
