@@ -5,12 +5,18 @@
   "repository": "",
   "main": "index.ts",
   "scripts": {
-    "build": "node node_modules/typescript/bin/tsc",
-    "test": "jest --config jest.config.json",
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
     "lint": "node node_modules/ts-standard/bin/cmd *.ts"
   },
   "keywords": [],
   "author": "Manuel Jager",
+  "contributors": [
+    "Manuel Jager",
+    "Stijn Stroeve"
+  ],
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^26.0.23",

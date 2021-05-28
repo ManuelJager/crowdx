@@ -1,8 +1,12 @@
 {
   "compilerOptions": {
     "strict": true,
-    "target": "es6",
+    "target": "es5",
     "module": "commonjs",
     "sourceMap": true,
-  }
+    "outDir": "./dist"
+  },
+  "exclude": [
+    "./src/tests"
+  ]
 }

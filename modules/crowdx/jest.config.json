@@ -1,12 +1,16 @@
 {
   "moduleFileExtensions": [
     "js",
-    "json"
+    "json",
+    "ts"
   ],
   "rootDir": "./src/",
-  "testRegex": ".test.js$",
+  "testRegex": ".test.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
   "setupFiles": [
-    "<rootDir>/tests/setup.js"
+    "<rootDir>/tests/setup.ts"
   ],
   "coverageDirectory": "<rootDir>/../coverage",
   "testEnvironment": "node",
