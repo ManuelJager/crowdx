@@ -1,0 +1,32 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - 'main'
+      - '*github-action*'
+
+  pull_request:
+    branches:
+      - '*'
+
+  # Allow to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '15'
+
+      # Note: We do not cache the node_modules because it is not recommended: https://github.com/actions/cache/blob/main/examples.md#node---npm
+
+      # Run all tests
+      - run: npm install
+
+      # Run all tests
+      - run: npm run test
