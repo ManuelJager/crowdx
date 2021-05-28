@@ -17,7 +17,7 @@ class Core {
    * @param observable - Observable
    * @param observer - Observer
    */
-  registerObserver<T>(observable: IObservable<T>, observer: IObserver<T>) {
+  registerObserver<ValueType>(observable: IObservable<ValueType>, observer: IObserver<ValueType>) {
     let observers = this.observables.get(observable);
 
     if (typeof observers === 'undefined') {
@@ -36,7 +36,7 @@ class Core {
    * @param observable - Observable
    * @param observer - Observer
    */
-  unregisterObserver<T>(observable: IObservable<T>, observer: IObserver<T>) {
+  unregisterObserver<ValueType>(observable: IObservable<ValueType>, observer: IObserver<ValueType>) {
     let observers = this.observables.get(observable)
 
     if (typeof observers === 'undefined') {
@@ -54,7 +54,7 @@ class Core {
     }
   }
 
-  unregisterAllObservers<T>(observable: IObservable<T>) {
+  unregisterAllObservers<ValueType>(observable: IObservable<ValueType>) {
     let observers = this.observables.get(observable)
 
     if (typeof observers === 'undefined') {
@@ -65,7 +65,7 @@ class Core {
     this.observables.delete(observable);
   }
 
-  notifyObservers<T>(observable: IObservable<T>, newValue: T, oldValue: T) {
+  notifyObservers<ValueType>(observable: IObservable<ValueType>, newValue: ValueType, oldValue: ValueType) {
     const observers = this.observables.get(observable)
 
     if (typeof observers !== 'undefined') {

@@ -2,7 +2,7 @@ import { IObservable, IObserver, Options } from "../lib";
 import Core from '../core';
 
 type Deps = IObservable[]
-type Handler<T> = () => T;
+type Handler<ValueType> = () => ValueType;
 
 class Computed<ValueType> implements IObservable<ValueType>, IObserver {
   private readonly deps: Deps;
@@ -53,9 +53,9 @@ class Computed<ValueType> implements IObservable<ValueType>, IObserver {
   }
 }
 
-const computed = <T>(deps: Deps, handler: Handler<T>, options: Options = {
+const computed = <ValueType>(deps: Deps, handler: Handler<ValueType>, options: Options = {
   debugName: 'default',
-}): Computed<T> => {
+}): Computed<ValueType> => {
   return new Computed(deps, handler, options);
 };
 

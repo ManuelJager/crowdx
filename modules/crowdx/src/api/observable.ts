@@ -30,9 +30,9 @@ class Observable<ValueType = any> implements IObservable<ValueType> {
   }
 }
 
-const observable = <T>(value: T, options: Options = {
+const observable = <ValueType>(value: ValueType, options: Options = {
   debugName: 'default'
-}): Observable<T> => {
+}): Observable<ValueType> => {
   return new Observable(value, options)
 }
 
