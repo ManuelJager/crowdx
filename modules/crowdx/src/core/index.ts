@@ -27,7 +27,6 @@ class Core {
 
     observers.push(observer)
     this.observables.set(observable, observers)
-    console.log(observers);
   }
 
   /**
