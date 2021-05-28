@@ -1,18 +1,18 @@
 import { IObservable, IObserver, IObserverHandler, IRemoveHandler } from '../lib'
 import Core from '../core'
 
-class Observer<T> implements IObserver<T> {
-  public onUpdate: IObserverHandler<T>
+class Observer<ValueT> implements IObserver<ValueT> {
+  public onUpdate: IObserverHandler<ValueT>
 
-  private readonly dep: IObservable<T>
+  private readonly dep: IObservable<ValueT>
 
-  constructor (dep: IObservable<T>, handler: IObserverHandler<T>) {
+  constructor (dep: IObservable<ValueT>, handler: IObserverHandler<ValueT>) {
     this.dep = dep
     this.onUpdate = handler
   }
 }
 
-const observe = <T>(dep: IObservable<T>, handler: IObserverHandler<T>): [Observer<T>, IRemoveHandler] => {
+const observe = <ValueT>(dep: IObservable<ValueT>, handler: IObserverHandler<ValueT>): [Observer<ValueT>, IRemoveHandler] => {
   const observer = new Observer(dep, handler)
   Core.registerObserver(dep, observer)
   return [
