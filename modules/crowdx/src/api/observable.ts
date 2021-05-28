@@ -1,11 +1,11 @@
 import {IObservable, IRemoveHandler, Options} from '../lib'
 import Core from '../core'
 
-class Observable<ValueType = any> implements IObservable<ValueType> {
-  private value: ValueType
+class Observable<ValueT = any> implements IObservable<ValueT> {
+  private value: ValueT
   private options: Options;
 
-  constructor (value: ValueType, options: Options) {
+  constructor (value: ValueT, options: Options) {
     this.value = value
     this.options = options
   }
@@ -14,7 +14,7 @@ class Observable<ValueType = any> implements IObservable<ValueType> {
     return this.value
   }
 
-  set (value: ValueType) {
+  set (value: ValueT) {
     const old = this.value;
     this.value = value
 
@@ -30,9 +30,9 @@ class Observable<ValueType = any> implements IObservable<ValueType> {
   }
 }
 
-const observable = <ValueType>(value: ValueType, options: Options = {
+const observable = <ValueT>(value: ValueT, options: Options = {
   debugName: 'default'
-}): Observable<ValueType> => {
+}): Observable<ValueT> => {
   return new Observable(value, options)
 }
 

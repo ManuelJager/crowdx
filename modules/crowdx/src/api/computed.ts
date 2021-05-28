@@ -2,16 +2,16 @@ import { IObservable, IObserver, Options } from "../lib";
 import Core from '../core';
 
 type Deps = IObservable[]
-type Handler<ValueType> = () => ValueType;
+type Handler<ValueT> = () => ValueT;
 
-class Computed<ValueType> implements IObservable<ValueType>, IObserver {
+class Computed<ValueT> implements IObservable<ValueT>, IObserver {
   private readonly deps: Deps;
-  private readonly handler: Handler<ValueType>
+  private readonly handler: Handler<ValueT>
   private readonly options: Options;
-  private value: ValueType;
+  private value: ValueT;
   private observed: boolean;
 
-  constructor(deps: Deps, handler: Handler<ValueType>, options: Options) {
+  constructor(deps: Deps, handler: Handler<ValueT>, options: Options) {
     this.deps = deps;
     this.handler = handler;
     this.options = options;
@@ -19,7 +19,7 @@ class Computed<ValueType> implements IObservable<ValueType>, IObserver {
     this.observed = false;
   }
 
-  get(): ValueType {
+  get(): ValueT {
     if (!this.observed) {
       throw new Error('Cannot get value of unobserved computed')
     }
@@ -53,9 +53,9 @@ class Computed<ValueType> implements IObservable<ValueType>, IObserver {
   }
 }
 
-const computed = <ValueType>(deps: Deps, handler: Handler<ValueType>, options: Options = {
+const computed = <ValueT>(deps: Deps, handler: Handler<ValueT>, options: Options = {
   debugName: 'default',
-}): Computed<ValueType> => {
+}): Computed<ValueT> => {
   return new Computed(deps, handler, options);
 };
 
