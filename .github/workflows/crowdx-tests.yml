@@ -5,10 +5,14 @@ on:
     branches:
       - 'main'
       - '*github-action*'
+    paths:
+      - 'modules/crowdx'
 
   pull_request:
     branches:
       - '*'
+    paths:
+      - 'modules/crowdx'
 
   # Allow to run this workflow manually from the Actions tab
   workflow_dispatch:
