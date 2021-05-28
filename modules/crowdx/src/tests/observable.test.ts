@@ -1,31 +1,52 @@
 import { observable, observe } from '../api'
 
 describe('Observable', () => {
-  test('Basic functionality', () => {
-    const num1 = observable(1, { debugName: 'num1' })
 
-    const [observer, stopObserving] = observe<number>(num1, (oldValue, newValue) => {
-      expect(oldValue).toBe(1)
-      expect(newValue).toBe(3)
+  describe('Basic functionality', () => {
+
+    it('should observe the observable number', (done) => {
+      const num1 = observable(1, { debugName: 'num1' })
+
+      const [_, stopObserving] = observe<number>(num1, (newValue, oldValue) => {
+        expect(oldValue).toBe(1)
+        expect(newValue).toBe(3)
+
+        done();
+      })
+
+      num1.set(3)
+
+      stopObserving()
     })
 
-    num1.set(3)
-
-    stopObserving()
   })
 
-  test('Unsubscribing', () => {
-    const num2 = observable(1, { debugName: 'num2' })
-    let called = false
+  describe('Unsubscribing', () => {
 
-    const [_, stopObserving] = observe<number>(num2, (oldValue, newValue) => {
-      called = true
+    it('should call the handler function if the stopObserving is not called', () => {
+      const num2 = observable(1, { debugName: 'num2' })
+      const handler = jest.fn(() => {})
+
+      observe<number>(num2, handler)
+
+      num2.set(3)
+
+      expect(handler).toBeCalled();
     })
 
-    stopObserving()
+    it('should not call the handler function if the stopObserving is called', () => {
+      const num2 = observable(1, { debugName: 'num2' })
+      const handler = jest.fn(() => {})
 
-    num2.set(3)
+      const [_, stopObserving] = observe<number>(num2, handler)
 
-    expect(called).toBe(false)
+      stopObserving()
+
+      num2.set(3)
+
+      expect(handler).not.toBeCalled();
+    })
+
   })
+
 })

@@ -4,14 +4,14 @@ import Core from '../core';
 type Deps = IObservable[]
 type Handler<T> = () => T;
 
-class Computed<T> implements IObservable<T>, IObserver {
+class Computed<ValueType> implements IObservable<ValueType>, IObserver {
   private readonly deps: Deps;
-  private readonly handler: Handler<T>
+  private readonly handler: Handler<ValueType>
   private readonly options: Options;
-  private value: T;
+  private value: ValueType;
   private observed: boolean;
 
-  constructor(deps: Deps, handler: Handler<T>, options: Options) {
+  constructor(deps: Deps, handler: Handler<ValueType>, options: Options) {
     this.deps = deps;
     this.handler = handler;
     this.options = options;
@@ -19,7 +19,7 @@ class Computed<T> implements IObservable<T>, IObserver {
     this.observed = false;
   }
 
-  get(): T {
+  get(): ValueType {
     if (!this.observed) {
       throw new Error('Cannot get value of unobserved computed')
     }
@@ -27,8 +27,11 @@ class Computed<T> implements IObservable<T>, IObserver {
     return this.value;
   }
 
-  onUpdate(oldValue: any, newValue: any): void {
+  onUpdate(): void {
+    const old = this.value;
     this.value = this.handler();
+
+    Core.notifyObservers(this, this.value, old)
   }
 
   onBecomeObserved(): void {

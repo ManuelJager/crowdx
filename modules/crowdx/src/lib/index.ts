@@ -1,10 +1,14 @@
-export type IObserverHandler<T> = (oldValue: T, newValue: T) => void
+export type IObserverHandler<T> = (newValue: T, oldValue: T) => void
 
 export type IRemoveHandler = () => void
 
-export type Options = {
-  debugName: string,
+export type DebugOptions = {
+  debugName: string
 }
+
+export type Options = {
+  // Add the options here
+} & DebugOptions;
 
 export interface IObservable<T = any> {
   onBecomeObserved(): void;

@@ -27,6 +27,7 @@ class Core {
 
     observers.push(observer)
     this.observables.set(observable, observers)
+    console.log(observers);
   }
 
   /**
@@ -64,11 +65,11 @@ class Core {
     this.observables.delete(observable);
   }
 
-  notifyObservers<T>(observable: IObservable<T>, oldValue: T, newValue: T) {
+  notifyObservers<T>(observable: IObservable<T>, newValue: T, oldValue: T) {
     const observers = this.observables.get(observable)
 
     if (typeof observers !== 'undefined') {
-      observers.map((observer) => observer.onUpdate(oldValue, newValue))
+      observers.map((observer) => observer.onUpdate(newValue, oldValue))
     }
 
   }
