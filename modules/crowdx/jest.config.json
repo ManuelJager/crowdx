@@ -6,7 +6,7 @@
   "rootDir": "./src/",
   "testRegex": ".test.js$",
   "setupFiles": [
-    "<rootDir>/tests/setup.js"
+    "<rootDir>/tests/setup.ts"
   ],
   "coverageDirectory": "<rootDir>/../coverage",
   "testEnvironment": "node",
