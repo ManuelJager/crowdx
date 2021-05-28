@@ -1,20 +1,26 @@
-import { IObservable, IObserver, Options } from "../lib";
+import { IObservable, IObserver } from "../lib";
 import Core from '../core';
+import {Kind} from "./index";
+import {Observable} from "./observable";
 
 type Deps = IObservable[]
 type Handler<ValueT> = () => ValueT;
 
-class Computed<ValueT> implements IObservable<ValueT>, IObserver {
+export const isComputed = (obj: any): obj is Computed => {
+  return obj.__crowdx_kind__ === Kind.Computed;
+}
+
+export class Computed<ValueT = unknown> implements IObservable<ValueT>, IObserver {
+  private readonly __crowdx_kind__: Kind = Kind.Computed;
+
   private readonly deps: Deps;
   private readonly handler: Handler<ValueT>
-  private readonly options: Options;
   private value: ValueT;
   private observed: boolean;
 
-  constructor(deps: Deps, handler: Handler<ValueT>, options: Options) {
+  constructor(deps: Deps, handler: Handler<ValueT>) {
     this.deps = deps;
     this.handler = handler;
-    this.options = options;
     this.value = handler();
     this.observed = false;
   }
@@ -35,7 +41,6 @@ class Computed<ValueT> implements IObservable<ValueT>, IObserver {
   }
 
   onBecomeObserved(): void {
-    console.log(`computed ${this.options.debugName} onBecomeObserved`);
     this.observed = true;
 
     for (const dep of this.deps) {
@@ -44,7 +49,6 @@ class Computed<ValueT> implements IObservable<ValueT>, IObserver {
   }
 
   onBecomeUnobserved(): void {
-    console.log(`computed ${this.options.debugName} onBecomeUnobserved`);
     this.observed = false;
 
     for (const dep of this.deps) {
@@ -53,10 +57,8 @@ class Computed<ValueT> implements IObservable<ValueT>, IObserver {
   }
 }
 
-const computed = <ValueT>(deps: Deps, handler: Handler<ValueT>, options: Options = {
-  debugName: 'default',
-}): Computed<ValueT> => {
-  return new Computed(deps, handler, options);
+const computed = <ValueT>(deps: Deps, handler: Handler<ValueT>): Computed<ValueT> => {
+  return new Computed(deps, handler);
 };
 
 export default computed;

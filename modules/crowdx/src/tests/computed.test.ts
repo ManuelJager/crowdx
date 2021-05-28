@@ -6,13 +6,11 @@ describe('Computed', () => {
 
     it('should observe the computed value if it is updated', (done) => {
 
-      const num1 = observable(1, { debugName: 'num1' });
-      const num2 = observable(2, { debugName: 'num2' });
+      const num1 = observable(1);
+      const num2 = observable(2);
 
       const sum = computed([num1, num2], () => {
         return num1.get() + num2.get();
-      }, {
-        debugName: 'sum'
       })
 
       observe(sum, (newValue, oldValue) => {

@@ -1,13 +1,18 @@
-import {IObservable, IRemoveHandler, Options} from '../lib'
+import {IObservable} from '../lib'
 import Core from '../core'
+import {Kind} from '.';
 
-class Observable<ValueT = any> implements IObservable<ValueT> {
+export const isObservable = (obj: any): obj is Observable => {
+  return obj.__crowdx_kind__ === Kind.Observable;
+}
+
+export class Observable<ValueT = unknown> implements IObservable<ValueT> {
+  private readonly __crowdx_kind__: Kind = Kind.Observable
+
   private value: ValueT
-  private options: Options;
 
-  constructor (value: ValueT, options: Options) {
+  constructor (value: ValueT) {
     this.value = value
-    this.options = options
   }
 
   get () {
@@ -21,19 +26,13 @@ class Observable<ValueT = any> implements IObservable<ValueT> {
     Core.notifyObservers(this, value, old)
   }
 
-  onBecomeObserved(): void {
-    console.log(`observable ${this.options.debugName} onBecomeObserved`);
-  }
+  onBecomeObserved(): void { }
 
-  onBecomeUnobserved(): void {
-    console.log(`observable ${this.options.debugName} onBecomeUnobserved`);
-  }
+  onBecomeUnobserved(): void { }
 }
 
-const observable = <ValueT>(value: ValueT, options: Options = {
-  debugName: 'default'
-}): Observable<ValueT> => {
-  return new Observable(value, options)
+const observable = <ValueT>(value: ValueT): Observable<ValueT> => {
+  return new Observable(value)
 }
 
 export default observable

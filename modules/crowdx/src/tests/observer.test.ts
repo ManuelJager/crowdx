@@ -2,7 +2,7 @@ import { observable, observe } from '../api';
 
 describe('Observer', () => {
 
-  describe('observe', () => {
+  describe('Basic functionality', () => {
 
     it('should call the handler function when the observable value changed', (done) => {
       const initialValue = 'initial';

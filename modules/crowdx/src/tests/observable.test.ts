@@ -5,7 +5,7 @@ describe('Observable', () => {
   describe('Basic functionality', () => {
 
     it('should observe the observable number', (done) => {
-      const num1 = observable(1, { debugName: 'num1' })
+      const num1 = observable(1)
 
       const [_, stopObserving] = observe<number>(num1, (newValue, oldValue) => {
         expect(oldValue).toBe(1)
@@ -24,7 +24,7 @@ describe('Observable', () => {
   describe('Unsubscribing', () => {
 
     it('should call the handler function if the stopObserving is not called', () => {
-      const num2 = observable(1, { debugName: 'num2' })
+      const num2 = observable(1)
       const handler = jest.fn(() => {})
 
       observe<number>(num2, handler)
@@ -35,7 +35,7 @@ describe('Observable', () => {
     })
 
     it('should not call the handler function if the stopObserving is called', () => {
-      const num2 = observable(1, { debugName: 'num2' })
+      const num2 = observable(1)
       const handler = jest.fn(() => {})
 
       const [_, stopObserving] = observe<number>(num2, handler)
