@@ -17,12 +17,12 @@ class Core {
    * @param observable - Observable
    * @param observer - Observer
    */
-  registerObserver<ValueT>(observable: IObservable<ValueT>, observer: IObserver<ValueT>) {
-    let observers = this.observables.get(observable);
+  registerObserver<ValueT>(observable: IObservable<ValueT>, observer: IObserver<ValueT>): void {
+    let observers = this.observables.get(observable)
 
     if (typeof observers === 'undefined') {
-      observers = [];
-      observable.onBecomeObserved();
+      observers = []
+      observable.onBecomeObserved()
     }
 
     observers.push(observer)
@@ -35,14 +35,14 @@ class Core {
    * @param observable - Observable
    * @param observer - Observer
    */
-  unregisterObserver<ValueT>(observable: IObservable<ValueT>, observer: IObserver<ValueT>) {
-    let observers = this.observables.get(observable)
+  unregisterObserver<ValueT>(observable: IObservable<ValueT>, observer: IObserver<ValueT>): void {
+    const observers = this.observables.get(observable)
 
     if (typeof observers === 'undefined') {
       throw new Error('Cannot unregister observer for unobserved observable')
     }
 
-    const index = observers.indexOf(observer);
+    const index = observers.indexOf(observer)
     observers.splice(index, 1)
 
     if (observers.length === 0) {
@@ -53,24 +53,23 @@ class Core {
     }
   }
 
-  unregisterAllObservers<ValueT>(observable: IObservable<ValueT>) {
-    let observers = this.observables.get(observable)
+  unregisterAllObservers<ValueT>(observable: IObservable<ValueT>): void {
+    const observers = this.observables.get(observable)
 
     if (typeof observers === 'undefined') {
       throw new Error('Cannot unregister observer for unobserved observable')
     }
 
     observable.onBecomeUnobserved()
-    this.observables.delete(observable);
+    this.observables.delete(observable)
   }
 
-  notifyObservers<ValueT>(observable: IObservable<ValueT>, newValue: ValueT, oldValue: ValueT) {
+  notifyObservers<ValueT>(observable: IObservable<ValueT>, newValue: ValueT, oldValue: ValueT): void {
     const observers = this.observables.get(observable)
 
     if (typeof observers !== 'undefined') {
       observers.map((observer) => observer.onUpdate(newValue, oldValue))
     }
-
   }
 }
 

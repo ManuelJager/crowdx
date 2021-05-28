@@ -7,4 +7,3 @@ export enum Kind {
   Observable,
   Computed,
 }
-
