@@ -1,4 +1,4 @@
-name: Tests
+name: CrowdX module tests
 
 on:
   push:
@@ -16,6 +16,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: modules/crowdx
 
     steps:
       - uses: actions/checkout@v2
