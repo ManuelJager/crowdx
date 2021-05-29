@@ -11,3 +11,14 @@ export interface IObservable<ValueT = any> {
 export interface IObserver<ValueT = any> {
   onUpdate: IObserverHandler<ValueT>
 }
+
+export enum Kind {
+  Observable,
+  Computed,
+  Derived,
+}
+
+export * from './derived';
+export * from './computed';
+export * from './store';
+export * from './observable';
