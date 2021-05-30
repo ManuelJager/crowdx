@@ -1,4 +1,5 @@
 import {createStore, observe} from '../api';
+import {Store} from '../lib';
 
 describe('Store', () => {
   describe('Create store', () => {
@@ -69,6 +70,20 @@ describe('Store', () => {
       store.num1 = 5;
 
       expect(handler).toBeCalled()
+    })
+  })
+
+  describe('Edge cases', () => {
+    it('should not allow for reserved keyword usage', () => {
+      const emptyStore = createStore({})
+      const props = Object.getOwnPropertyNames(emptyStore)
+        .concat(Object.getOwnPropertyNames(Store.prototype));
+
+      for (const prop of props) {
+        expect(() => {
+          createStore({ [prop]: 1 })
+        }, `prop: ${prop}`).toThrow()
+      }
     })
   })
 })

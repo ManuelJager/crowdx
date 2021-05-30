@@ -16,5 +16,8 @@
   "testEnvironment": "node",
   "coveragePathIgnorePatterns": [
     "<rootDir>/tests"
+  ],
+  "setupFilesAfterEnv": [
+    "jest-expect-message"
   ]
 }

@@ -1,5 +1,5 @@
-import {IObservable, IObserver, Kind} from "./index";
-import Core from "../core";
+import { IObservable, IObserver, Kind } from './index'
+import Core from '../core'
 
 export type ComputedDeps = IObservable[]
 export type ComputedHandler<ValueT> = () => ValueT

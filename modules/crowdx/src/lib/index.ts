@@ -18,7 +18,6 @@ export enum Kind {
   Derived,
 }
 
-export * from './derived';
-export * from './computed';
-export * from './store';
-export * from './observable';
+export * from './computed'
+export * from './store'
+export * from './observable'
