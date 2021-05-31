@@ -49,4 +49,24 @@ describe('Observable', () => {
 
   })
 
+  describe('Same value updating', () => {
+
+    it('should not update the value if set() is called with the same value twice', () => {
+
+      const num = observable(1)
+
+      const handler = jest.fn(() => {
+        console.log('update');
+      })
+
+      observe(num, handler);
+
+      num.set(5);
+      num.set(5);
+
+      expect(handler).toBeCalledTimes(1);
+    })
+
+  })
+
 })
