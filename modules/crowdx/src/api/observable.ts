@@ -18,8 +18,6 @@ export class Observable<ValueT = any> implements IObservable<ValueT> {
   set (value: ValueT): void {
     const old = this.value
 
-    if(old === value) return;
-
     this.value = value
 
     Core.notifyObservers(this, value, old)
