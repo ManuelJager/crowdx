@@ -4,9 +4,9 @@ import {
   IObserver,
   IObserverHandler,
   IRemoveHandler,
-  ObserverOptions
 } from '../lib'
 import Core from '../core'
+import { applyDefaultObserverOptions, ObserverOptions } from '../lib/options/observerOptions';
 
 export class Observer<ValueT> implements IObserver<ValueT> {
   public onUpdate: IObserverHandler<ValueT>
@@ -24,10 +24,14 @@ export class Observer<ValueT> implements IObserver<ValueT> {
 const observe = <Dep extends IObservable>(
   dep: Dep,
   handler: IObserverHandler<IObservableValueType<Dep>>,
-  options: ObserverOptions<IObservableValueType<Dep>> = {}
+  options: ObserverOptions<IObservableValueType<Dep>> = { }
 ): [Observer<IObservableValueType<Dep>>, IRemoveHandler] => {
+
+  applyDefaultObserverOptions(options);
+
   const observer = new Observer(dep, handler, options)
   Core.registerObserver(dep, observer)
+
   return [
     observer,
     () => Core.unregisterObserver(dep, observer)

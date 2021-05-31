@@ -1,4 +1,5 @@
 import { observable, observe } from '../api'
+import { DoubleEquals } from '../lib/equality';
 
 describe('Observable', () => {
 
@@ -54,20 +55,33 @@ describe('Observable', () => {
     it('should not update the value if set() is called with the same value twice', () => {
 
       const num = observable(1)
+      const handler = jest.fn()
 
-      const handler = jest.fn(() => {
-        console.log('update');
-      })
+      observe(num, handler)
 
-      observe(num, handler, {
-        equality: (newVal, oldVal) => newVal == oldVal
-      });
+      num.set(5)
+      num.set(5)
+      num.set(5)
 
-      num.set(5);
+      expect(handler).toBeCalledTimes(1)
+
+      num.set(6)
+
+      expect(handler).toBeCalledTimes(2)
+    })
+
+    it('should not update the value if set() is called with the same value twice and the equality is set to DoubleEquals', () => {
+
+      const num = observable(1)
+      const handler = jest.fn()
+
+      observe(num, handler, {equality: DoubleEquals})
+
+      num.set(5)
       // @ts-ignore
-      num.set('5');
+      num.set('5')
 
-      expect(handler).toBeCalledTimes(1);
+      expect(handler).toBeCalledTimes(1)
     })
 
   })

@@ -1,5 +1,6 @@
-import { IObservable, ObservableOptions } from '../lib'
+import { IObservable } from '../lib'
 import Core from '../core'
+import { ObservableOptions } from '../lib/options/observableOptions';
 
 export class Observable<ValueT = any> implements IObservable<ValueT> {
   private value: ValueT

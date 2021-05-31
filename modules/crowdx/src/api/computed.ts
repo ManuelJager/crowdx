@@ -1,6 +1,8 @@
-import { ComputedOptions, IObservable, IObservableValueType, IObserver } from '../lib'
+import { IObservable, IObservableValueType, IObserver } from '../lib'
 import Core from '../core'
 import { Observable } from './observable'
+import { applyDefaultObserverOptions } from '../lib/options/observerOptions';
+import { ComputedOptions } from '../lib/options/computedOptions';
 
 type DepValues<Deps extends {[key: string]: Observable}> = {
   [Property in keyof Deps]: IObservableValueType<Deps[Property]>;
@@ -149,7 +151,14 @@ class Computed<ValueT, Deps extends {[key: string]: Observable}> implements IObs
   }
 }
 
-const computed = <ValueT, Deps extends {[key: string]: Observable}>(deps: Deps, handler: Handler<ValueT, Deps>, options: ComputedOptions<ValueT> = {}): Computed<ValueT, Deps> => {
+const computed = <ValueT, Deps extends {[key: string]: Observable}>(
+  deps: Deps,
+  handler: Handler<ValueT, Deps>,
+  options: ComputedOptions<ValueT> = { }
+): Computed<ValueT, Deps> => {
+
+  applyDefaultObserverOptions(options);
+
   return new Computed(deps, handler, options)
 }
 
