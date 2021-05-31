@@ -1,4 +1,4 @@
-import { IObservable, IObservableValueType, IObserver, IObserverHandler, IRemoveHandler } from '../lib'
+import { IObservable, IObservableValueType, IObserver, IObserverHandler } from '../lib'
 import Core from '../core'
 
 class Observer<ValueT> implements IObserver<ValueT> {
@@ -10,15 +10,16 @@ class Observer<ValueT> implements IObserver<ValueT> {
     this.dep = dep
     this.onUpdate = handler
   }
+
+  public stop (): void {
+    return Core.unregisterObserver(this.dep, this)
+  }
 }
 
-const observe = <Dep extends IObservable>(dep: Dep, handler: IObserverHandler<IObservableValueType<Dep>>): [Observer<IObservableValueType<Dep>>, IRemoveHandler] => {
+const observe = <Dep extends IObservable>(dep: Dep, handler: IObserverHandler<IObservableValueType<Dep>>): Observer<IObservableValueType<Dep>> => {
   const observer = new Observer(dep, handler)
   Core.registerObserver(dep, observer)
-  return [
-    observer,
-    () => Core.unregisterObserver(dep, observer)
-  ]
+  return observer
 }
 
 export default observe

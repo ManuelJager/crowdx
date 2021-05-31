@@ -1,5 +1,5 @@
-import {createStore, observe} from '../api';
-import {Store} from '../lib';
+import {createStore, observe} from '../api'
+import {Store} from '../lib'
 
 describe('Store', () => {
   describe('Create store', () => {
@@ -9,7 +9,7 @@ describe('Store', () => {
         num2: 2,
       });
 
-      store.num1 = 3;
+      store.num1 = 3
 
       expect(store.num1).toBe(3);
     })
@@ -21,14 +21,14 @@ describe('Store', () => {
       })
 
       const handler = jest.fn(({ num1 }) => {
-        expect(num1).toBe(3);
+        expect(num1).toBe(3)
       });
 
-      observe(store, handler);
+      observe(store, handler)
 
-      store.num1 = 3;
+      store.num1 = 3
 
-      expect(handler).toBeCalled();
+      expect(handler).toBeCalled()
     })
 
     it('should work as a function call', () => {
@@ -38,14 +38,14 @@ describe('Store', () => {
       }))
 
       const handler = jest.fn(({ num1 }) => {
-        expect(num1).toBe(3);
+        expect(num1).toBe(3)
       });
 
-      observe(store, handler);
+      observe(store, handler)
 
-      store.num1 = 3;
+      store.num1 = 3
 
-      expect(handler).toBeCalled();
+      expect(handler).toBeCalled()
     })
 
     it('should support deriveds', () => {
@@ -57,17 +57,17 @@ describe('Store', () => {
         })
       }))
 
-      store.num1 = 3;
+      store.num1 = 3
 
-      expect(store.sum).toBe(5);
+      expect(store.sum).toBe(5)
 
       const handler = jest.fn(({ sum }) => {
-        expect(sum).toBe(7);
+        expect(sum).toBe(7)
       })
 
       observe(store, handler)
 
-      store.num1 = 5;
+      store.num1 = 5
 
       expect(handler).toBeCalled()
     })

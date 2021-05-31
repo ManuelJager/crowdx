@@ -1,13 +1,15 @@
-import { IObservable, Kind } from '.'
+import { IObservable, Kind, ObservableOptions } from '.'
 import Core from '../core'
 
-export class Observable<ValueT = unknown> implements IObservable<ValueT> {
+export class Observable<ValueT = any> implements IObservable<ValueT> {
   private readonly __crowdx_kind__: Kind = Kind.Observable
 
   private value: ValueT
+  private readonly options: ObservableOptions
 
-  constructor (value: ValueT) {
+  constructor (value: ValueT, options: ObservableOptions) {
     this.value = value
+    this.options = options
   }
 
   get (): ValueT {
@@ -21,7 +23,11 @@ export class Observable<ValueT = unknown> implements IObservable<ValueT> {
     Core.notifyObservers(this, value, old)
   }
 
-  onBecomeObserved (): void { }
+  onBecomeObserved (): void {
+    console.log(`observable ${this.options.debugName ?? ''} onBecomeObserved`)
+  }
 
-  onBecomeUnobserved (): void { }
+  onBecomeUnobserved (): void {
+    console.log(`observable ${this.options.debugName ?? ''} onBecomeUnobserved`)
+  }
 }

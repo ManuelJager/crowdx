@@ -7,7 +7,7 @@ describe('Observable', () => {
     it('should observe the observable number', (done) => {
       const num1 = observable(1)
 
-      const [_, stopObserving] = observe(num1, (newValue, oldValue) => {
+      const observer = observe(num1, (newValue, oldValue) => {
         expect(oldValue).toBe(1)
         expect(newValue).toBe(3)
 
@@ -16,7 +16,7 @@ describe('Observable', () => {
 
       num1.set(3)
 
-      stopObserving()
+      observer.stop()
     })
 
   })
@@ -31,20 +31,20 @@ describe('Observable', () => {
 
       num2.set(3)
 
-      expect(handler).toBeCalled();
+      expect(handler).toBeCalled()
     })
 
     it('should not call the handler function if the stopObserving is called', () => {
       const num2 = observable(1)
       const handler = jest.fn(() => {})
 
-      const [_, stopObserving] = observe(num2, handler)
+      const observer = observe(num2, handler)
 
-      stopObserving()
+      observer.stop()
 
       num2.set(3)
 
-      expect(handler).not.toBeCalled();
+      expect(handler).not.toBeCalled()
     })
 
   })

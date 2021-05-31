@@ -10,7 +10,8 @@ const reservedKeywords = [
   '__crowdx_assignDerived__',
   '__crowdx_sendChanges__',
   'onBecomeObserved',
-  'onBecomeUnobserved'
+  'onBecomeUnobserved',
+  'get'
 ]
 
 interface Derived<ValueT = any> {
@@ -28,10 +29,10 @@ interface DefInputParameters<StoreT> {
 }
 
 // Store definition can be either a function that return a definition, or the definition itself
-export type StoreDefInput<StoreT> = ((input: DefInputParameters<StoreT>) => StoreT) | StoreT
+export type StoreDefInput<StoreT extends { [name: string]: any}> = ((input: DefInputParameters<StoreT>) => StoreT) | StoreT
 
 export interface StoreDef {
-  [key: string]: Computed | any
+  [key: string]: Computed<any, any> | any
 }
 
 const guardReservedKeyword = (name: string): void => {
@@ -153,5 +154,9 @@ export class Store<StoreT extends StoreDef> implements IObservable<StoreT> {
     }
 
     Core.notifyObservers(this, this.__crowdx_values__, undefined)
+  }
+
+  get (): StoreT {
+    return this.__crowdx_values__ as unknown as StoreT
   }
 }

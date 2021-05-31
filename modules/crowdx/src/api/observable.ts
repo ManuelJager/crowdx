@@ -1,4 +1,4 @@
-import {Observable, ObservableOptions} from '../lib'
+import { Observable, ObservableOptions } from '../lib'
 
 const observable = <ValueT>(value: ValueT, options: ObservableOptions = {
   debugName: 'default'
