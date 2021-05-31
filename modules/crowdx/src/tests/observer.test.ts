@@ -10,7 +10,7 @@ describe('Observer', () => {
 
       const testObs = observable(initialValue)
 
-      observe<string>(testObs, (newValue, oldValue) => {
+      observe(testObs, (newValue, oldValue) => {
         expect(newValue).toBe(updatedValue)
         expect(oldValue).toBe(initialValue)
 
