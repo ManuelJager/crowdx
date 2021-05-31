@@ -7,7 +7,7 @@ describe('Observable', () => {
     it('should observe the observable number', (done) => {
       const num1 = observable(1)
 
-      const [_, stopObserving] = observe<number>(num1, (newValue, oldValue) => {
+      const [_, stopObserving] = observe(num1, (newValue, oldValue) => {
         expect(oldValue).toBe(1)
         expect(newValue).toBe(3)
 
@@ -27,7 +27,7 @@ describe('Observable', () => {
       const num2 = observable(1)
       const handler = jest.fn(() => {})
 
-      observe<number>(num2, handler)
+      observe(num2, handler)
 
       num2.set(3)
 
@@ -38,7 +38,7 @@ describe('Observable', () => {
       const num2 = observable(1)
       const handler = jest.fn(() => {})
 
-      const [_, stopObserving] = observe<number>(num2, handler)
+      const [_, stopObserving] = observe(num2, handler)
 
       stopObserving()
 
