@@ -1,4 +1,4 @@
-import { Computed, IObservable, Kind } from './index'
+import {Computed, IObservable, Kind, Observable, DepValues, Deps} from './index'
 import Core from '../core'
 
 const reservedKeywords = [
@@ -16,7 +16,7 @@ const reservedKeywords = [
 
 interface Derived<ValueT = any> {
   __crowdx_kind__: Kind.Derived
-  __handler: () => ValueT
+  handler: () => ValueT
 }
 
 interface DefInputParameters<StoreT> {
@@ -26,6 +26,17 @@ interface DefInputParameters<StoreT> {
    * @param handler
    */
   derived: <ValueT>(handler: (state: StoreT) => ValueT) => Derived<ValueT>
+
+  /**
+   * A property that depends on the state from the current store, and the state of the dependency object
+   *
+   * @param deps
+   * @param handler
+   */
+  computed: <ValueT, Deps extends {[key: string]: Observable}>(
+    deps: Deps,
+    handler: (deps: DepValues<Deps> & { store: StoreT }) => ValueT
+  ) => Computed<ValueT, Deps>
 }
 
 // Store definition can be either a function that return a definition, or the definition itself
@@ -69,8 +80,20 @@ export class Store<StoreT extends StoreDef> implements IObservable<StoreT> {
           // Use bound handler and use store as dependency
           return {
             __crowdx_kind__: Kind.Derived,
-            __handler: handler.bind(this, this as unknown as StoreT)
+            handler: handler.bind(this, this as unknown as StoreT)
           }
+        },
+        computed: <ValueT, DepsT extends Deps>(
+          deps: DepsT,
+          handler: (deps: DepValues<DepsT> & { store: StoreT }) => ValueT
+        ): Computed<ValueT, DepsT> => {
+          if (deps.hasOwnProperty('store')) {
+            throw new Error('store is a reserved keyword')
+          }
+
+          deps = { ...deps, store: this }
+          // @ts-ignore
+          return new Computed<ValueT, DepsT & { store: StoreT }>(deps, handler);
         }
       })
     }
@@ -83,7 +106,8 @@ export class Store<StoreT extends StoreDef> implements IObservable<StoreT> {
         case Kind.Observable:
           throw new Error(`Direct observable usage for ${name} is not supported`)
         case Kind.Computed:
-          throw new Error(`Direct computed usage for ${name} is not supported`)
+          this.__crowdx_assignComputed__(name, value)
+          break
         case Kind.Derived:
           this.__crowdx_assignDerived__(name, value)
           break
@@ -93,14 +117,15 @@ export class Store<StoreT extends StoreDef> implements IObservable<StoreT> {
     }
   }
 
+  __crowdx_assignComputed__ (name: string, value: Computed<any, any>): void {
+    throw new Error('Not implemented yet');
+  }
+
   // Assign a derived
   __crowdx_assignDerived__ (name: string, value: Derived): void {
-    // Get handler for the derived
-    const handler = value.__handler
-
     // Define the setter for the derived as a function that stores the result of a derived into the store state
     const setter = (): void => {
-      this.__crowdx_values__[name] = handler()
+      this.__crowdx_values__[name] = value.handler()
     }
 
     // Initialize default value

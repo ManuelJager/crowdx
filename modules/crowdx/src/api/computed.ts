@@ -2,10 +2,15 @@ import {
   ComputedOptions,
   Observable,
   ComputedHandler,
-  Computed
+  Computed,
+  Deps
 } from '../lib'
 
-const computed = <ValueT, Deps extends {[key: string]: Observable}>(deps: Deps, handler: ComputedHandler<ValueT, Deps>, options: ComputedOptions = {}): Computed<ValueT, Deps> => {
+const computed = <ValueT, DepsT extends Deps>(
+  deps: DepsT,
+  handler: ComputedHandler<ValueT, DepsT>,
+  options: ComputedOptions | undefined = undefined
+): Computed<ValueT, DepsT> => {
   return new Computed(deps, handler, options)
 }
 
