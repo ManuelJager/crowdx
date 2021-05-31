@@ -12,7 +12,6 @@ class Observer<ValueT> implements IObserver<ValueT> {
   }
 }
 
-
 const observe = <Dep extends IObservable>(dep: Dep, handler: IObserverHandler<IObservableValueType<Dep>>): [Observer<IObservableValueType<Dep>>, IRemoveHandler] => {
   const observer = new Observer(dep, handler)
   Core.registerObserver(dep, observer)

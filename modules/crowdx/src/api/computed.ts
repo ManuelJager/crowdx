@@ -1,57 +1,57 @@
-import { ComputedOptions, IObservable, IObservableValueType, IObserver } from '../lib';
-import Core from '../core';
-import { Observable } from './observable';
+import { ComputedOptions, IObservable, IObservableValueType, IObserver } from '../lib'
+import Core from '../core'
+import { Observable } from './observable'
 
 type DepValues<Deps extends {[key: string]: Observable}> = {
   [Property in keyof Deps]: IObservableValueType<Deps[Property]>;
-};
-type Handler<ValueT, Deps extends {[key: string]: Observable}> = ((depValues: DepValues<Deps>) => ValueT) | ((depValues: DepValues<Deps>) => Promise<ValueT>);
+}
+type Handler<ValueT, Deps extends {[key: string]: Observable}> = ((depValues: DepValues<Deps>) => ValueT) | ((depValues: DepValues<Deps>) => Promise<ValueT>)
 
 class Computed<ValueT, Deps extends {[key: string]: Observable}> implements IObservable<ValueT>, IObserver {
-  private readonly deps: Deps;
+  private readonly deps: Deps
   private readonly handler: Handler<ValueT, Deps>
-  private readonly options: ComputedOptions;
-  private value: ValueT;
-  private observed: boolean;
+  private readonly options: ComputedOptions
+  private value: ValueT
+  private observed: boolean
 
-  private readonly promiseQueue: Promise<ValueT>[];
-  private readonly awaitingValues: {notifyObservers: boolean, value: ValueT}[];
+  private readonly promiseQueue: Array<Promise<ValueT>>
+  private readonly awaitingValues: Array<{notifyObservers: boolean, value: ValueT}>
 
-  constructor(deps: Deps, handler: Handler<ValueT, Deps>, options: ComputedOptions) {
-    this.deps = deps;
-    this.handler = handler;
-    this.options = options;
-    this.observed = false;
-    this.promiseQueue = [];
-    this.awaitingValues = [];
+  constructor (deps: Deps, handler: Handler<ValueT, Deps>, options: ComputedOptions) {
+    this.deps = deps
+    this.handler = handler
+    this.options = options
+    this.observed = false
+    this.promiseQueue = []
+    this.awaitingValues = []
 
-    this.updateValue(false);
+    this.updateValue(false)
   }
 
   /**
    * Gets the current values of the dependencies mapped to an object the following way: 'dependencyName' => 'value'
    * @private
    */
-  private getDependencyValues(): DepValues<Deps> {
-    const values: any = {};
+  private getDependencyValues (): DepValues<Deps> {
+    const values: any = {}
 
     for (const [name, dep] of Object.entries(this.deps)) {
-      values[name] = dep.get();
+      values[name] = dep.get()
     }
 
-    return values;
+    return values
   }
 
   /**
    * Loops over every awaiting value and notifies in to the observer.
    * @private
    */
-  private notifyAwaitingValues(): void {
-    for(const awaitingValue of this.awaitingValues) {
-      const newOld = this.value;
-      this.value = awaitingValue.value;
+  private notifyAwaitingValues (): void {
+    for (const awaitingValue of this.awaitingValues) {
+      const newOld = this.value
+      this.value = awaitingValue.value
 
-      if(awaitingValue.notifyObservers) {
+      if (awaitingValue.notifyObservers) {
         Core.notifyObservers(this, this.value, newOld)
       }
     }
@@ -71,87 +71,84 @@ class Computed<ValueT, Deps extends {[key: string]: Observable}> implements IObs
    * @param notifyObservers If true, the observers of this computed will be notified once the value has updated.
    * @private
    */
-  private updateValue(notifyObservers: boolean = true): void {
-    const old = this.value;
-    const depValues = this.getDependencyValues();
-    const val = this.handler(depValues);
+  private updateValue (notifyObservers: boolean = true): void {
+    const old = this.value
+    const depValues = this.getDependencyValues()
+    const val = this.handler(depValues)
 
-    if(val instanceof Promise) {
-
-      this.promiseQueue.push(val);
-      const i = this.promiseQueue.indexOf(val);
+    if (val instanceof Promise) {
+      this.promiseQueue.push(val)
+      const i = this.promiseQueue.indexOf(val)
 
       // TODO: In the future find a less ugly way to do this.
-      val.then(function(this: Computed<ValueT, Deps>, newValue: ValueT) {
-
-        if(this.promiseQueue[0] != val) {
+      val.then(function (this: Computed<ValueT, Deps>, newValue: ValueT) {
+        if (this.promiseQueue[0] !== val) {
           this.awaitingValues.push({
             value: newValue,
             notifyObservers
-          });
+          })
         } else {
-          const newOld = this.value;
-          this.value = newValue;
+          const newOld = this.value
+          this.value = newValue
 
-          if(notifyObservers) {
+          if (notifyObservers) {
             Core.notifyObservers(this, this.value, newOld)
           }
 
-          this.notifyAwaitingValues();
+          this.notifyAwaitingValues()
         }
 
-        this.promiseQueue.splice(i, 1);
-
+        this.promiseQueue.splice(i, 1)
       }.bind(this))
         .catch((error) => {
-          if(typeof this.options.errorHandler === 'function') {
-            this.options.errorHandler(error);
+          if (typeof this.options.errorHandler === 'function') {
+            this.options.errorHandler(error)
           } else {
-            console.error('Unhandled error', error);
+            console.error('Unhandled error', error)
           }
         })
     } else {
-      this.value = val;
+      this.value = val
 
-      if(notifyObservers) {
+      if (notifyObservers) {
         Core.notifyObservers(this, this.value, old)
       }
     }
   }
 
-  get(): ValueT {
+  get (): ValueT {
     if (!this.observed) {
       throw new Error('Cannot get value of unobserved computed')
     }
 
-    return this.value;
+    return this.value
   }
 
-  async onUpdate(): Promise<void> {
-    this.updateValue();
+  async onUpdate (): Promise<void> {
+    this.updateValue()
   }
 
-  onBecomeObserved(): void {
-    console.log(`computed ${this.options.debugName} onBecomeObserved`);
-    this.observed = true;
+  onBecomeObserved (): void {
+    console.log(`computed ${this.options.debugName ?? ''} onBecomeObserved`)
+    this.observed = true
 
     for (const dep of Object.values(this.deps)) {
-      Core.registerObserver(dep, this);
+      Core.registerObserver(dep, this)
     }
   }
 
-  onBecomeUnobserved(): void {
-    console.log(`computed ${this.options.debugName} onBecomeUnobserved`);
-    this.observed = false;
+  onBecomeUnobserved (): void {
+    console.log(`computed ${this.options.debugName ?? ''} onBecomeUnobserved`)
+    this.observed = false
 
     for (const dep of Object.values(this.deps)) {
-      Core.unregisterObserver(dep, this);
+      Core.unregisterObserver(dep, this)
     }
   }
 }
 
 const computed = <ValueT, Deps extends {[key: string]: Observable}>(deps: Deps, handler: Handler<ValueT, Deps>, options: ComputedOptions = {}): Computed<ValueT, Deps> => {
-  return new Computed(deps, handler, options);
-};
+  return new Computed(deps, handler, options)
+}
 
-export default computed;
+export default computed
