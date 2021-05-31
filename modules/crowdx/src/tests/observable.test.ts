@@ -59,10 +59,13 @@ describe('Observable', () => {
         console.log('update');
       })
 
-      observe(num, handler);
+      observe(num, handler, {
+        equality: (newVal, oldVal) => newVal == oldVal
+      });
 
       num.set(5);
-      num.set(5);
+      // @ts-ignore
+      num.set('5');
 
       expect(handler).toBeCalledTimes(1);
     })
