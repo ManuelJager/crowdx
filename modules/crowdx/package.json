@@ -9,7 +9,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "lint": "node node_modules/ts-standard/bin/cmd *.ts"
+    "lint": "node node_modules/ts-standard/bin/cmd **/*.ts"
   },
   "keywords": [],
   "author": "Manuel Jager",
