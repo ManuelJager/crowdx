@@ -1,7 +1,7 @@
-import { ComputedOptions, IObservable, IObservableValueType, IObserver, Kind} from '.'
+import { ComputedOptions, IObservable, IObservableValueType, IObserver, Kind } from '.'
 import Core from '../core'
 
-export type Deps = {[key: string]: IObservable};
+export interface Deps {[key: string]: IObservable}
 
 export type DepValues<DepsT extends Deps> = {
   [Property in keyof DepsT]: IObservableValueType<DepsT[Property]>;

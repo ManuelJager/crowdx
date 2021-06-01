@@ -1,4 +1,4 @@
-import {Computed, IObservable, Kind, Observable, DepValues, Deps} from './index'
+import { Computed, IObservable, Kind } from './index'
 import Core from '../core'
 
 const reservedKeywords = [
@@ -26,17 +26,6 @@ interface DefInputParameters<StoreT> {
    * @param handler
    */
   derived: <ValueT>(handler: (state: StoreT) => ValueT) => Derived<ValueT>
-
-  /**
-   * A property that depends on the state from the current store, and the state of the dependency object
-   *
-   * @param deps
-   * @param handler
-   */
-  computed: <ValueT, Deps extends {[key: string]: Observable}>(
-    deps: Deps,
-    handler: (deps: DepValues<Deps> & { store: StoreT }) => ValueT
-  ) => Computed<ValueT, Deps>
 }
 
 // Store definition can be either a function that return a definition, or the definition itself
@@ -82,18 +71,6 @@ export class Store<StoreT extends StoreDef> implements IObservable<StoreT> {
             __crowdx_kind__: Kind.Derived,
             handler: handler.bind(this, this as unknown as StoreT)
           }
-        },
-        computed: <ValueT, DepsT extends Deps>(
-          deps: DepsT,
-          handler: (deps: DepValues<DepsT> & { store: StoreT }) => ValueT
-        ): Computed<ValueT, DepsT> => {
-          if (deps.hasOwnProperty('store')) {
-            throw new Error('store is a reserved keyword')
-          }
-
-          deps = { ...deps, store: this }
-          // @ts-ignore
-          return new Computed<ValueT, DepsT & { store: StoreT }>(deps, handler);
         }
       })
     }
@@ -106,8 +83,7 @@ export class Store<StoreT extends StoreDef> implements IObservable<StoreT> {
         case Kind.Observable:
           throw new Error(`Direct observable usage for ${name} is not supported`)
         case Kind.Computed:
-          this.__crowdx_assignComputed__(name, value)
-          break
+          throw new Error(`Direct computed usage for ${name} is not supported`)
         case Kind.Derived:
           this.__crowdx_assignDerived__(name, value)
           break
@@ -115,10 +91,6 @@ export class Store<StoreT extends StoreDef> implements IObservable<StoreT> {
           this.__crowdx_assignProperty__(name, value)
       }
     }
-  }
-
-  __crowdx_assignComputed__ (name: string, value: Computed<any, any>): void {
-    throw new Error('Not implemented yet');
   }
 
   // Assign a derived

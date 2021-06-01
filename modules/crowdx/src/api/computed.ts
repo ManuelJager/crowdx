@@ -1,6 +1,5 @@
 import {
   ComputedOptions,
-  Observable,
   ComputedHandler,
   Computed,
   Deps
