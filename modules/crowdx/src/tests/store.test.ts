@@ -73,6 +73,51 @@ describe('Store', () => {
     })
   })
 
+  describe('Set', () => {
+    it('should not set values for a property that does not exist', () => {
+      const store = createStore({
+        num1: 1,
+      })
+
+      expect(() => {
+        store.set({ num2: 2 })
+      }).toThrow('num2 is not defined')
+    })
+
+    it('should not set values of a derived property', () => {
+      const store = createStore(({ derived }) => ({
+        num1: 1,
+        num2: 2,
+        sum: derived(({ num1, num2 }) => num1 + num2)
+      }))
+
+      expect(() => {
+        store.set({ sum: 3 })
+      }).toThrow('sum is readonly')
+    })
+
+    it('should call the handler once', () => {
+      const store = createStore({
+        num1: 1,
+        num2: 2,
+      })
+
+      const handler = jest.fn(({ num1, num2 }) => {
+        expect(num1).toBe(3)
+        expect(num2).toBe(4)
+      })
+
+      observe(store, handler)
+
+      store.set({
+        num1: 3,
+        num2: 4,
+      })
+
+      expect(handler).toBeCalledTimes(1)
+    })
+  })
+
   describe('Edge cases', () => {
     it('should not allow for reserved keyword usage', () => {
       const emptyStore = createStore({})
@@ -82,7 +127,7 @@ describe('Store', () => {
       for (const prop of props) {
         expect(() => {
           createStore({ [prop]: 1 })
-        }, `prop: ${prop}`).toThrow()
+        }).toThrow(`${prop} is a reserved keyword`)
       }
     })
   })

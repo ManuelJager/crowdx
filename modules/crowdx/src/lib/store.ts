@@ -5,13 +5,15 @@ const reservedKeywords = [
   '__crowdx_values__',
   '__crowdx_deriveds__',
   '__crowdx_observed__',
+  '__crowdx_capturingChanges__',
   'constructor',
   '__crowdx_assignProperty__',
   '__crowdx_assignDerived__',
   '__crowdx_sendChanges__',
   'onBecomeObserved',
   'onBecomeUnobserved',
-  'get'
+  'get',
+  'set'
 ]
 
 interface Derived<ValueT = any> {
@@ -55,6 +57,9 @@ export class Store<StoreT extends StoreDef> implements IObservable<StoreT> {
 
   // Whether or not we are observed
   private __crowdx_observed__ = false
+
+  // Whether or not we are capturing changes
+  private __crowdx_capturingChanges__ = false
 
   /**
    * Creates a new store using a store definition, which may be an object, or a function that returns an object
@@ -155,5 +160,35 @@ export class Store<StoreT extends StoreDef> implements IObservable<StoreT> {
 
   get (): StoreT {
     return this.__crowdx_values__ as unknown as StoreT
+  }
+
+  set (obj: { [name: string]: any }): void {
+    // Validation
+    for (const key of Object.keys(obj)) {
+      const descriptor = Object.getOwnPropertyDescriptor(this, key)
+
+      if (typeof descriptor === 'undefined') {
+        throw new Error(`${key} is not defined`)
+      }
+
+      if (typeof descriptor.set === 'undefined') {
+        throw new Error(`${key} is readonly`)
+      }
+    }
+
+    this.__crowdx_capturingChanges__ = true
+
+    try {
+      for (const key of Object.keys(obj)) {
+        this.__crowdx_values__[key] = obj[key]
+      }
+
+      this.__crowdx_sendChanges__()
+    } catch (e) {
+      this.__crowdx_capturingChanges__ = false
+      throw e
+    }
+
+    this.__crowdx_capturingChanges__ = false
   }
 }

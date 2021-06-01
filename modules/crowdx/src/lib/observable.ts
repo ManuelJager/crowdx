@@ -23,11 +23,7 @@ export class Observable<ValueT = any> implements IObservable<ValueT> {
     Core.notifyObservers(this, value, old)
   }
 
-  onBecomeObserved (): void {
-    console.log(`observable ${this.options.debugName ?? ''} onBecomeObserved`)
-  }
+  onBecomeObserved (): void { }
 
-  onBecomeUnobserved (): void {
-    console.log(`observable ${this.options.debugName ?? ''} onBecomeUnobserved`)
-  }
+  onBecomeUnobserved (): void { }
 }
