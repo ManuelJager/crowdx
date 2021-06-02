@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+}
+
+h1, h2, h3, h4, h5 {
+    margin: 0;
+    color: white;
+}
+
+h2 {
+    font-weight: 300;
+}
+
+input, button {
+    padding: 10px;
+}
+
+.section {
+    background-color: #545454;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 5px;
+    width: 500px;
+}
+
+.section > .title {
+    margin-bottom: 15px;
+}
+
+#weight-input {
+    margin-top: 15px;
+}

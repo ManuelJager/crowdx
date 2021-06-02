@@ -1,0 +1,25 @@
+{
+  "name": "crowdx-examples",
+  "version": "0.0.1",
+  "description": "Examples for the state management library crowdx",
+  "main": "index.html",
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack --watch",
+    "lint": "node node_modules/ts-standard/bin/cmd **/*.ts"
+  },
+  "keywords": [],
+  "author": "Stijn Stroeve",
+  "contributors": [
+    "Manuel Jager",
+    "Stijn Stroeve"
+  ],
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^15.6.1",
+    "ts-loader": "^9.2.2",
+    "typescript": "^4.3.2",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0"
+  }
+}
