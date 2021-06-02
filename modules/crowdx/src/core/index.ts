@@ -68,7 +68,16 @@ class Core {
     const observers = this.observables.get(observable)
 
     if (typeof observers !== 'undefined') {
-      observers.map((observer) => observer.onUpdate(newValue, oldValue))
+      observers.map((observer) => {
+
+        // We should only update the observer old and new values don't equal each other.
+        const equal = !!observer.options.equality?.(newValue, oldValue)
+
+        if(!equal) {
+          // The values are not equal, thus they can be updated.
+          observer.onUpdate(newValue, oldValue)
+        }
+      })
     }
   }
 }

@@ -1,5 +1,6 @@
-import { IObservable, ObservableOptions } from '../lib'
+import { IObservable } from '../lib'
 import Core from '../core'
+import { ObservableOptions } from '../lib/options';
 
 export class Observable<ValueT = any> implements IObservable<ValueT> {
   private value: ValueT
@@ -16,6 +17,7 @@ export class Observable<ValueT = any> implements IObservable<ValueT> {
 
   set (value: ValueT): void {
     const old = this.value
+
     this.value = value
 
     Core.notifyObservers(this, value, old)

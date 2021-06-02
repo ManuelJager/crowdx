@@ -1,6 +1,7 @@
-import { ComputedOptions, IObservable, IObservableValueType, IObserver } from '../lib'
+import { IObservable, IObservableValueType, IObserver } from '../lib'
 import Core from '../core'
 import { Observable } from './observable'
+import { applyDefaultObserverOptions, ComputedOptions } from '../lib/options';
 
 type DepValues<Deps extends {[key: string]: Observable}> = {
   [Property in keyof Deps]: IObservableValueType<Deps[Property]>;
@@ -8,16 +9,18 @@ type DepValues<Deps extends {[key: string]: Observable}> = {
 type Handler<ValueT, Deps extends {[key: string]: Observable}> = ((depValues: DepValues<Deps>) => ValueT) | ((depValues: DepValues<Deps>) => Promise<ValueT>)
 
 class Computed<ValueT, Deps extends {[key: string]: Observable}> implements IObservable<ValueT>, IObserver {
+
+  public readonly options: ComputedOptions<ValueT>
+
   private readonly deps: Deps
   private readonly handler: Handler<ValueT, Deps>
-  private readonly options: ComputedOptions
   private value: ValueT
   private observed: boolean
 
   private readonly promiseQueue: Array<Promise<ValueT>>
   private readonly awaitingValues: Array<{notifyObservers: boolean, value: ValueT}>
 
-  constructor (deps: Deps, handler: Handler<ValueT, Deps>, options: ComputedOptions) {
+  constructor (deps: Deps, handler: Handler<ValueT, Deps>, options: ComputedOptions<ValueT>) {
     this.deps = deps
     this.handler = handler
     this.options = options
@@ -147,7 +150,14 @@ class Computed<ValueT, Deps extends {[key: string]: Observable}> implements IObs
   }
 }
 
-const computed = <ValueT, Deps extends {[key: string]: Observable}>(deps: Deps, handler: Handler<ValueT, Deps>, options: ComputedOptions = {}): Computed<ValueT, Deps> => {
+const computed = <ValueT, Deps extends {[key: string]: Observable}>(
+  deps: Deps,
+  handler: Handler<ValueT, Deps>,
+  options: ComputedOptions<ValueT> = { }
+): Computed<ValueT, Deps> => {
+
+  applyDefaultObserverOptions(options);
+
   return new Computed(deps, handler, options)
 }
 
