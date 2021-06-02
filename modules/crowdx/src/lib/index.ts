@@ -1,5 +1,5 @@
 import { PromiseValue } from 'type-fest'
-import { ObserverOptions } from './options/observerOptions';
+import { ObserverOptions } from './options';
 export type IObserverHandler<ValueT> = (newValue: PromiseValue<ValueT>, oldValue: PromiseValue<ValueT>) => void
 export type IObservableValueType<Obs extends IObservable> = ReturnType<Obs['get']>
 
@@ -15,3 +15,5 @@ export interface IObserver<ValueT = any> {
   onUpdate: IObserverHandler<ValueT>
   options: ObserverOptions<ValueT>
 }
+
+export * from './equality'

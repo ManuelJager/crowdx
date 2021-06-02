@@ -1,5 +1,4 @@
 import { IObservable, IObserver } from '../lib'
-import { Observer } from '../api/observe';
 
 /**
  * global state

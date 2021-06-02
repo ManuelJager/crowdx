@@ -1,8 +1,7 @@
 import { IObservable, IObservableValueType, IObserver } from '../lib'
 import Core from '../core'
 import { Observable } from './observable'
-import { applyDefaultObserverOptions } from '../lib/options/observerOptions';
-import { ComputedOptions } from '../lib/options/computedOptions';
+import { applyDefaultObserverOptions, ComputedOptions } from '../lib/options';
 
 type DepValues<Deps extends {[key: string]: Observable}> = {
   [Property in keyof Deps]: IObservableValueType<Deps[Property]>;

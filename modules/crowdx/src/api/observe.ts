@@ -6,7 +6,7 @@ import {
   IRemoveHandler,
 } from '../lib'
 import Core from '../core'
-import { applyDefaultObserverOptions, ObserverOptions } from '../lib/options/observerOptions';
+import { applyDefaultObserverOptions, ObserverOptions } from '../lib/options';
 
 export class Observer<ValueT> implements IObserver<ValueT> {
   public onUpdate: IObserverHandler<ValueT>
