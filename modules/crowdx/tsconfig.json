@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
     "strict": true,
-    "target": "es6",
+    "target": "es5",
     "module": "commonjs",
     "sourceMap": true,
     "outDir": "./dist",
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "lib": [
+      "es2017"
+    ]
   },
   "exclude": [
     "./src/tests"

@@ -1,4 +1,4 @@
-import { ComputedOptions, IObservable, IObservableValueType, IObserver, Kind } from '.'
+import { ComputedOptions, IObservable, IObservableValueType, IObserver } from '.'
 import Core from '../core'
 
 export interface Deps {[key: string]: IObservable}
@@ -10,8 +10,6 @@ export type DepValues<DepsT extends Deps> = {
 export type ComputedHandler<ValueT, DepsT extends Deps> = ((depValues: DepValues<DepsT>) => ValueT) | ((depValues: DepValues<DepsT>) => Promise<ValueT>)
 
 export class Computed<ValueT, DepsT extends Deps> implements IObservable<ValueT>, IObserver {
-  private readonly __crowdx_kind__: Kind = Kind.Computed
-
   private readonly deps: DepsT
   private readonly handler: ComputedHandler<ValueT, DepsT>
   private readonly options: ComputedOptions

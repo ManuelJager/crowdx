@@ -1,4 +1,4 @@
-import { Computed, IObservable, Kind } from './index'
+import { Computed, IObservable, Derived, Observable } from '.'
 import Core from '../core'
 
 const reservedKeywords = [
@@ -6,20 +6,15 @@ const reservedKeywords = [
   '__crowdx_deriveds__',
   '__crowdx_observed__',
   '__crowdx_capturingChanges__',
-  'constructor',
   '__crowdx_assignProperty__',
   '__crowdx_assignDerived__',
   '__crowdx_sendChanges__',
+  'constructor',
   'onBecomeObserved',
   'onBecomeUnobserved',
   'get',
   'set'
 ]
-
-interface Derived<ValueT = any> {
-  __crowdx_kind__: Kind.Derived
-  handler: () => ValueT
-}
 
 interface DefInputParameters<StoreT> {
   /**
@@ -70,13 +65,7 @@ export class Store<StoreT extends StoreDef> implements IObservable<StoreT> {
     // Get store definition from function
     if (typeof def === 'function') {
       def = def({
-        derived: <ValueT>(handler: (state: StoreT) => ValueT): Derived<ValueT> => {
-          // Use bound handler and use store as dependency
-          return {
-            __crowdx_kind__: Kind.Derived,
-            handler: handler.bind(this, this as unknown as StoreT)
-          }
-        }
+        derived: (handler) => new Derived(handler.bind(this, this as unknown as StoreT))
       })
     }
 
@@ -84,16 +73,14 @@ export class Store<StoreT extends StoreDef> implements IObservable<StoreT> {
     for (const [name, value] of Object.entries(def)) {
       guardReservedKeyword(name)
 
-      switch (value.__crowdx_kind__) {
-        case Kind.Observable:
-          throw new Error(`Direct observable usage for ${name} is not supported`)
-        case Kind.Computed:
-          throw new Error(`Direct computed usage for ${name} is not supported`)
-        case Kind.Derived:
-          this.__crowdx_assignDerived__(name, value)
-          break
-        default:
-          this.__crowdx_assignProperty__(name, value)
+      if (value instanceof Observable) {
+        throw new Error(`Direct observable usage for ${name} is not supported`)
+      } else if (value instanceof Computed) {
+        throw new Error(`Direct computed usage for ${name} is not supported`)
+      } else if (value instanceof Derived) {
+        this.__crowdx_assignDerived__(name, value as Derived)
+      } else {
+        this.__crowdx_assignProperty__(name, value)
       }
     }
   }

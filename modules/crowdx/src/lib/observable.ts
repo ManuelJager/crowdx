@@ -1,9 +1,7 @@
-import { IObservable, Kind, ObservableOptions } from '.'
+import { IObservable, ObservableOptions } from '.'
 import Core from '../core'
 
 export class Observable<ValueT = any> implements IObservable<ValueT> {
-  private readonly __crowdx_kind__: Kind = Kind.Observable
-
   private value: ValueT
   private readonly options: ObservableOptions
 
