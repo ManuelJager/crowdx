@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "State management library",
   "repository": "",
-  "main": "index.ts",
   "scripts": {
     "build": "tsc",
     "test": "jest",
