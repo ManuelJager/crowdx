@@ -5,6 +5,7 @@
     "module": "commonjs",
     "sourceMap": true,
     "outDir": "./dist",
+    "declaration": true,
     "strictPropertyInitialization": false,
     "lib": [
       "es2017"

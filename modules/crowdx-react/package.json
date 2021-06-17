@@ -4,8 +4,12 @@
   "description": "react integration for React",
   "main": "dist/index.js",
   "scripts": {
-    "test": "",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "lint": "ts-standard **/*.ts",
+    "lint:fix": "npm run lint -- --fix"
   },
   "author": "Manuel Jager",
   "license": "ISC",
