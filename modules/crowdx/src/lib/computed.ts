@@ -1,28 +1,30 @@
-import { ComputedOptions, IObservable, IObservableValueType, IObserver } from '.'
+import { ComputedOptions, IObservable, IObservableValueType, IObserver, Observable } from '.'
 import Core from '../core'
 
-export interface Deps {[key: string]: IObservable}
-
-export type DepValues<DepsT extends Deps> = {
-  [Property in keyof DepsT]: IObservableValueType<DepsT[Property]>;
+type DepValues<Deps extends {[key: string]: Observable}> = {
+  [Property in keyof Deps]: IObservableValueType<Deps[Property]>;
 }
 
-export type ComputedHandler<ValueT, DepsT extends Deps> = ((depValues: DepValues<DepsT>) => ValueT) | ((depValues: DepValues<DepsT>) => Promise<ValueT>)
+export type ComputedHandler<ValueT, Deps extends {[key: string]: Observable}> =
+  ((depValues: DepValues<Deps>) => ValueT) |
+  ((depValues: DepValues<Deps>) => Promise<ValueT>)
 
-export class Computed<ValueT, DepsT extends Deps> implements IObservable<ValueT>, IObserver {
-  private readonly deps: DepsT
-  private readonly handler: ComputedHandler<ValueT, DepsT>
-  private readonly options: ComputedOptions
+export class Computed<ValueT, Deps extends {[key: string]: Observable}> implements IObservable<ValueT>, IObserver {
+
+  public readonly options: ComputedOptions<ValueT>
+
+  private readonly deps: Deps
+  private readonly handler: ComputedHandler<ValueT, Deps>
   private value: ValueT
   private observed: boolean
 
   private readonly promiseQueue: Array<Promise<ValueT>>
   private readonly awaitingValues: Array<{notifyObservers: boolean, value: ValueT}>
 
-  constructor (deps: DepsT, handler: ComputedHandler<ValueT, DepsT>, options: ComputedOptions | undefined = undefined) {
+  constructor (deps: Deps, handler: ComputedHandler<ValueT, Deps>, options: ComputedOptions<ValueT>) {
     this.deps = deps
     this.handler = handler
-    this.options = options ?? {}
+    this.options = options
     this.observed = false
     this.promiseQueue = []
     this.awaitingValues = []
@@ -34,7 +36,7 @@ export class Computed<ValueT, DepsT extends Deps> implements IObservable<ValueT>
    * Gets the current values of the dependencies mapped to an object the following way: 'dependencyName' => 'value'
    * @private
    */
-  private getDependencyValues (): DepValues<DepsT> {
+  private getDependencyValues (): DepValues<Deps> {
     const values: any = {}
 
     for (const [name, dep] of Object.entries(this.deps)) {
@@ -83,7 +85,7 @@ export class Computed<ValueT, DepsT extends Deps> implements IObservable<ValueT>
       const i = this.promiseQueue.indexOf(val)
 
       // TODO: In the future find a less ugly way to do this.
-      val.then(function (this: Computed<ValueT, DepsT>, newValue: ValueT) {
+      val.then(function (this: Computed<ValueT, Deps>, newValue: ValueT) {
         if (this.promiseQueue[0] !== val) {
           this.awaitingValues.push({
             value: newValue,
@@ -131,6 +133,7 @@ export class Computed<ValueT, DepsT extends Deps> implements IObservable<ValueT>
   }
 
   onBecomeObserved (): void {
+    console.log(`computed ${this.options.debugName ?? ''} onBecomeObserved`)
     this.observed = true
 
     for (const dep of Object.values(this.deps)) {
@@ -139,6 +142,7 @@ export class Computed<ValueT, DepsT extends Deps> implements IObservable<ValueT>
   }
 
   onBecomeUnobserved (): void {
+    console.log(`computed ${this.options.debugName ?? ''} onBecomeUnobserved`)
     this.observed = false
 
     for (const dep of Object.values(this.deps)) {
@@ -146,3 +150,4 @@ export class Computed<ValueT, DepsT extends Deps> implements IObservable<ValueT>
     }
   }
 }
+
