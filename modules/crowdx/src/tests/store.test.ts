@@ -122,7 +122,10 @@ describe('Store', () => {
     it('should not allow for reserved keyword usage', () => {
       const emptyStore = createStore({})
       const props = Object.getOwnPropertyNames(emptyStore)
-        .concat(Object.getOwnPropertyNames(Store.prototype));
+        .concat(Object.getOwnPropertyNames(Store.prototype))
+        .concat(Object.getOwnPropertyNames(Object.prototype))
+        // Ignore __proto__, as this property is almost always set
+        .filter((name) => name !== '__proto__')
 
       for (const prop of props) {
         expect(() => {

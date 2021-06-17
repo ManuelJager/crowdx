@@ -2,6 +2,7 @@ import { Computed, IObservable, Derived, Observable } from '.'
 import Core from '../core'
 
 const reservedKeywords = [
+  // Store members
   '__crowdx_values__',
   '__crowdx_deriveds__',
   '__crowdx_observed__',
@@ -9,11 +10,11 @@ const reservedKeywords = [
   '__crowdx_assignProperty__',
   '__crowdx_assignDerived__',
   '__crowdx_sendChanges__',
-  'constructor',
   'onBecomeObserved',
   'onBecomeUnobserved',
   'get',
-  'set'
+  'set',
+  ...(Object.getOwnPropertyNames(Object.prototype))
 ]
 
 interface DefInputParameters<StoreT> {
@@ -33,10 +34,8 @@ export interface StoreDef {
 }
 
 const guardReservedKeyword = (name: string): void => {
-  for (const keyword of reservedKeywords) {
-    if (keyword === name) {
-      throw new Error(`${keyword} is a reserved keyword`)
-    }
+  if (reservedKeywords.includes(name)) {
+    throw new Error(`${name} is a reserved keyword`)
   }
 }
 
@@ -79,7 +78,7 @@ export class Store<StoreT extends StoreDef> implements IObservable<StoreT> {
         throw new Error(`Direct computed usage for ${name} is not supported`)
       } else if (value instanceof Derived) {
         this.__crowdx_assignDerived__(name, value as Derived)
-      } else {
+      } else if (value !== null) {
         this.__crowdx_assignProperty__(name, value)
       }
     }
