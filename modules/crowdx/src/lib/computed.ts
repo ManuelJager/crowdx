@@ -133,7 +133,6 @@ export class Computed<ValueT, DepsT extends Deps> implements IObservable<ValueT>
   }
 
   onBecomeObserved (): void {
-    console.log(`computed ${this.options.debugName ?? ''} onBecomeObserved`)
     this.observed = true
 
     for (const dep of Object.values(this.deps)) {
@@ -142,7 +141,6 @@ export class Computed<ValueT, DepsT extends Deps> implements IObservable<ValueT>
   }
 
   onBecomeUnobserved (): void {
-    console.log(`computed ${this.options.debugName ?? ''} onBecomeUnobserved`)
     this.observed = false
 
     for (const dep of Object.values(this.deps)) {
