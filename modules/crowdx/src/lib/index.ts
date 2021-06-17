@@ -1,20 +1,24 @@
-export type IObserverHandler<ValueT> = (newValue: ValueT, oldValue: ValueT) => void
+import { PromiseValue } from 'type-fest'
+import { ObserverOptions } from './options';
 
+export type IObserverHandler<ValueT> = (newValue: PromiseValue<ValueT>, oldValue: PromiseValue<ValueT>) => void
+export type IObservableValueType<Obs extends IObservable> = ReturnType<Obs['get']>
 export type IRemoveHandler = () => void
 
-export type DebugOptions = {
-  debugName: string
-}
-
-export type Options = {
-  // Add the options here
-} & DebugOptions;
-
 export interface IObservable<ValueT = any> {
-  onBecomeObserved(): void;
-  onBecomeUnobserved(): void;
+  get: () => ValueT
+  onBecomeObserved: () => void
+  onBecomeUnobserved: () => void
 }
 
 export interface IObserver<ValueT = any> {
   onUpdate: IObserverHandler<ValueT>
+  options: ObserverOptions<ValueT>
 }
+
+export * from './derived'
+export * from './computed'
+export * from './store'
+export * from './observable'
+export * from './equality'
+export * from './options'
