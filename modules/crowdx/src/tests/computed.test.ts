@@ -1,3 +1,5 @@
+// noinspection DuplicatedCode
+
 import { observe, computed, observable } from '../api'
 
 describe('Computed', () => {

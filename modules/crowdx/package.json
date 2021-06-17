@@ -5,11 +5,11 @@
   "repository": "",
   "main": "index.ts",
   "scripts": {
-    "build": "node node_modules/typescript/bin/tsc",
+    "build": "tsc",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "lint": "node node_modules/ts-standard/bin/cmd **/*.ts",
+    "lint": "ts-standard **/*.ts",
     "lint:fix": "npm run lint -- --fix"
   },
   "keywords": [],
