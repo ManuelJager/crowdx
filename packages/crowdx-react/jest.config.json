@@ -4,17 +4,17 @@
     "json",
     "ts"
   ],
-  "rootDir": "./src/",
+  "rootDir": "./src/tests",
   "testRegex": ".test.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "setupFiles": [
-    "<rootDir>/tests/setup.ts"
+    "<rootDir>/setup.ts"
   ],
-  "coverageDirectory": "<rootDir>/../coverage",
+  "coverageDirectory": "<rootDir>/../../coverage",
   "testEnvironment": "node",
   "coveragePathIgnorePatterns": [
-    "<rootDir>/tests"
+    "<rootDir>"
   ]
 }

@@ -1,5 +1,7 @@
 import { applyDefaultObserverOptions, ComputedOptions, Observable, ComputedHandler, Computed } from '../lib'
 
+export { Computed, Observable }
+
 const computed = <ValueT, Deps extends {[key: string]: Observable}>(
   deps: Deps,
   handler: ComputedHandler<ValueT, Deps>,

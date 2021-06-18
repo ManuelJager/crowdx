@@ -15,7 +15,7 @@ export class Computed<ValueT, Deps extends {[key: string]: Observable}> implemen
 
   private readonly deps: Deps
   private readonly handler: ComputedHandler<ValueT, Deps>
-  private value: ValueT
+  private value!: ValueT
   private observed: boolean
 
   private readonly promiseQueue: Array<Promise<ValueT>>

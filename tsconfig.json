@@ -4,10 +4,10 @@
     "target": "es5",
     "module": "commonjs",
     "sourceMap": true,
-    "outDir": "./dist",
-    "allowJs": true
-  },
-  "exclude": [
-    "./src/tests"
-  ]
+    "allowJs": true,
+    "declaration": true,
+    "lib": [
+      "es2017"
+    ]
+  }
 }
