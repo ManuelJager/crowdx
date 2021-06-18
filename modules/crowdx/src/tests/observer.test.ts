@@ -1,12 +1,12 @@
-import { observable, observe } from '../api';
+import { observable, observe } from '../api'
 
 describe('Observer', () => {
 
-  describe('observe', () => {
+  describe('Basic functionality', () => {
 
     it('should call the handler function when the observable value changed', (done) => {
-      const initialValue = 'initial';
-      const updatedValue = 'updated';
+      const initialValue = 'initial'
+      const updatedValue = 'updated'
 
       const testObs = observable(initialValue)
 
@@ -14,10 +14,10 @@ describe('Observer', () => {
         expect(newValue).toBe(updatedValue)
         expect(oldValue).toBe(initialValue)
 
-        done();
+        done()
       })
 
-      testObs.set(updatedValue);
+      testObs.set(updatedValue)
 
     })
 

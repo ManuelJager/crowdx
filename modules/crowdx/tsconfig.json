@@ -5,7 +5,10 @@
     "module": "commonjs",
     "sourceMap": true,
     "outDir": "./dist",
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "lib": [
+      "es2017"
+    ]
   },
   "exclude": [
     "./src/tests"
